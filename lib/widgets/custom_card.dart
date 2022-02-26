@@ -13,11 +13,11 @@ class CustomCard extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 30),
         padding: const EdgeInsets.all(20),
         width: double.infinity,
-        decoration: _CardShadowBox(),
+        decoration: _cardShadowBox(),
         child: child);
   }
 
-  BoxDecoration _CardShadowBox() => BoxDecoration(
+  BoxDecoration _cardShadowBox() => BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(25),
         boxShadow: const [

@@ -43,73 +43,70 @@ class _LoginForm extends StatelessWidget {
   Widget build(BuildContext context) {
     final form = Provider.of<LoginFormProvider>(context);
 
-    return Container(
-      child: Form(
-        key: form.formKey,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        child: Column(
-          children: [
-            TextFormField(
-              autocorrect: false,
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecorations.getInputDecoration(
-                  hintText: 'retta.huel@yahoo.com',
-                  labelText: 'Email',
-                  prefixIcon: Icons.email_outlined),
-              onChanged: (value) => form.email = value,
-              validator: (value) {
-                String pattern =
-                    r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    return Form(
+      key: form.formKey,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      child: Column(
+        children: [
+          TextFormField(
+            autocorrect: false,
+            keyboardType: TextInputType.emailAddress,
+            decoration: InputDecorations.getInputDecoration(
+                hintText: 'retta.huel@yahoo.com',
+                labelText: 'Email',
+                prefixIcon: Icons.email_outlined),
+            onChanged: (value) => form.email = value,
+            validator: (value) {
+              String pattern =
+                  r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 
-                RegExp regExp = RegExp(pattern);
-                return regExp.hasMatch(value ?? '') ? null : 'Invalid email';
-              },
-            ),
-            const SizedBox(height: 10),
-            TextFormField(
-              autocorrect: false,
-              obscureText: true,
-              keyboardType: TextInputType.text,
-              decoration: InputDecorations.getInputDecoration(
-                  hintText: '********',
-                  labelText: 'Password',
-                  prefixIcon: Icons.lock_outline),
-              onChanged: (value) => form.password = value,
-              validator: (value) {
-                return value != null && value.length >= 6
-                    ? null
-                    : 'Password is required and must be at least 6 characters';
-              },
-            ),
-            const SizedBox(height: 30),
-            MaterialButton(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-              disabledColor: Colors.grey,
-              elevation: 0,
-              color: Colors.deepPurple,
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 15, horizontal: 80),
-                child: Text(
-                  form.isLoading ? 'Please...' : 'Login',
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ),
-              onPressed: form.isLoading
+              RegExp regExp = RegExp(pattern);
+              return regExp.hasMatch(value ?? '') ? null : 'Invalid email';
+            },
+          ),
+          const SizedBox(height: 10),
+          TextFormField(
+            autocorrect: false,
+            obscureText: true,
+            keyboardType: TextInputType.text,
+            decoration: InputDecorations.getInputDecoration(
+                hintText: '********',
+                labelText: 'Password',
+                prefixIcon: Icons.lock_outline),
+            onChanged: (value) => form.password = value,
+            validator: (value) {
+              return value != null && value.length >= 6
                   ? null
-                  : () {
-                      FocusScope.of(context).unfocus();
-                      if (!form.isValidForm()) return;
-                      form.isLoading = true;
-                      Future.delayed(const Duration(seconds: 2), () {
-                        form.isLoading = false;
-                        Navigator.pushReplacementNamed(context, 'home');
-                      });
-                    },
+                  : 'Password is required and must be at least 6 characters';
+            },
+          ),
+          const SizedBox(height: 30),
+          MaterialButton(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            disabledColor: Colors.grey,
+            elevation: 0,
+            color: Colors.deepPurple,
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 80),
+              child: Text(
+                form.isLoading ? 'Please...' : 'Login',
+                style: const TextStyle(color: Colors.white),
+              ),
             ),
-          ],
-        ),
+            onPressed: form.isLoading
+                ? null
+                : () {
+                    FocusScope.of(context).unfocus();
+                    if (!form.isValidForm()) return;
+                    form.isLoading = true;
+                    Future.delayed(const Duration(seconds: 2), () {
+                      form.isLoading = false;
+                      Navigator.pushReplacementNamed(context, 'home');
+                    });
+                  },
+          ),
+        ],
       ),
     );
   }

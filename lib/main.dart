@@ -11,13 +11,23 @@ class ProductsApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Products App',
-      initialRoute: 'login',
+      initialRoute: 'home',
       routes: {
         'login': (context) => const LoginScreen(),
         'home': (context) => const HomeScreen(),
+        'product': (context) => const ProductScreen(),
       },
       theme: ThemeData.light().copyWith(
         scaffoldBackgroundColor: Colors.grey[300],
+        primaryColor: Colors.deepPurple,
+        appBarTheme: const AppBarTheme(
+          color: Colors.deepPurple,
+          elevation: 0,
+        ),
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+          backgroundColor: Colors.deepPurple,
+          elevation: 0,
+        ),
       ),
     );
   }
