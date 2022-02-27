@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:products_app/providers/login_form_provider.dart';
+import 'package:products_app/services/services.dart';
 import 'package:provider/provider.dart';
 import 'package:products_app/ui/input_decorations.dart';
 import 'package:products_app/widgets/widgets.dart';
@@ -26,8 +27,16 @@ class LoginScreen extends StatelessWidget {
               ),
             ])),
             const SizedBox(height: 50),
-            const Text('Create an account',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            TextButton(
+              onPressed: () =>
+                  Navigator.pushReplacementNamed(context, 'register'),
+              style: ButtonStyle(
+                  overlayColor: MaterialStateProperty.all(
+                      Colors.deepPurple.withOpacity(0.1)),
+                  shape: MaterialStateProperty.all(const StadiumBorder())),
+              child: const Text('Create an account',
+                  style: TextStyle(fontSize: 18, color: Colors.deepPurple)),
+            ),
             const SizedBox(height: 20),
           ],
         )),
@@ -96,14 +105,22 @@ class _LoginForm extends StatelessWidget {
             ),
             onPressed: form.isLoading
                 ? null
-                : () {
+                : () async {
+                    final authService =
+                        Provider.of<AuthService>(context, listen: false);
+
                     FocusScope.of(context).unfocus();
                     if (!form.isValidForm()) return;
                     form.isLoading = true;
-                    Future.delayed(const Duration(seconds: 2), () {
-                      form.isLoading = false;
+
+                    final String? error =
+                        await authService.signIn(form.email, form.password);
+                    if (error == null) {
                       Navigator.pushReplacementNamed(context, 'home');
-                    });
+                    } else {
+                      SnackBarNotificationService.showMessage(error);
+                    }
+                    form.isLoading = false;
                   },
           ),
         ],

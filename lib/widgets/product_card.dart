@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:products_app/models/models.dart';
 
 class ProductCard extends StatelessWidget {
-  const ProductCard({Key? key}) : super(key: key);
+  final Product product;
+  const ProductCard({Key? key, required this.product}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -12,19 +14,24 @@ class ProductCard extends StatelessWidget {
       decoration: _productCardBoxShadow(),
       child: Stack(
         alignment: Alignment.bottomLeft,
-        children: const [
-          _BackgroundImage(),
-          _ProductCardContent(),
+        children: [
+          _BackgroundImage(product: product),
+          _ProductCardContent(
+            product: product,
+          ),
           Positioned(
-            child: _ProductTagPrice(),
+            child: _ProductTagPrice(
+              product: product,
+            ),
             top: 0,
             right: 0,
           ),
-          Positioned(
-            child: _ProductTagNotAvailable(),
-            top: 0,
-            left: 0,
-          ),
+          if (!product.available)
+            const Positioned(
+              child: _ProductTagNotAvailable(),
+              top: 0,
+              left: 0,
+            ),
         ],
       ),
     );
@@ -46,8 +53,10 @@ class ProductCard extends StatelessWidget {
 }
 
 class _ProductTagPrice extends StatelessWidget {
+  final Product product;
   const _ProductTagPrice({
     Key? key,
+    required this.product,
   }) : super(key: key);
 
   @override
@@ -69,11 +78,11 @@ class _ProductTagPrice extends StatelessWidget {
           ),
         ],
       ),
-      child: const FittedBox(
+      child: FittedBox(
         fit: BoxFit.contain,
         child: Text(
-          '\$100.99',
-          style: TextStyle(
+          '\$${product.price}',
+          style: const TextStyle(
             color: Colors.white,
           ),
         ),
@@ -120,8 +129,10 @@ class _ProductTagNotAvailable extends StatelessWidget {
 }
 
 class _ProductCardContent extends StatelessWidget {
+  final Product product;
   const _ProductCardContent({
     Key? key,
+    required this.product,
   }) : super(key: key);
 
   @override
@@ -135,10 +146,10 @@ class _ProductCardContent extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
+          children: [
             Text(
-              'Product Name Here',
-              style: TextStyle(
+              product.name,
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
@@ -146,8 +157,8 @@ class _ProductCardContent extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             Text(
-              'Product ID',
-              style: TextStyle(color: Colors.white),
+              product.id.toString(),
+              style: const TextStyle(color: Colors.white),
             ),
           ],
         ),
@@ -164,20 +175,23 @@ class _ProductCardContent extends StatelessWidget {
 }
 
 class _BackgroundImage extends StatelessWidget {
+  final Product product;
   const _BackgroundImage({
     Key? key,
+    required this.product,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const ClipRRect(
-      borderRadius: BorderRadius.all(Radius.circular(20)),
+    return ClipRRect(
+      borderRadius: const BorderRadius.all(Radius.circular(20)),
       child: SizedBox(
         width: double.infinity,
         height: 350,
         child: FadeInImage(
-          placeholder: AssetImage('assets/loading.gif'),
-          image: NetworkImage('http://placeimg.com/640/480/technics'),
+          placeholder: const AssetImage('assets/loading.gif'),
+          image: NetworkImage(
+              product.photoUrl ?? 'http://placeimg.com/640/480/nature'),
           fit: BoxFit.cover,
         ),
       ),

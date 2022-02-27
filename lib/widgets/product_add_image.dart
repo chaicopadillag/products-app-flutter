@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 class ProductAddImage extends StatelessWidget {
-  const ProductAddImage({Key? key}) : super(key: key);
+  final String? imageUrl;
+  const ProductAddImage({Key? key, this.imageUrl}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -11,13 +14,10 @@ class ProductAddImage extends StatelessWidget {
       margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
       width: double.infinity,
       height: 400,
-      child: const ClipRRect(
-        borderRadius: borderRadiusImg,
-        child: FadeInImage(
-          image: NetworkImage('http://placeimg.com/640/480/nature'),
-          placeholder: AssetImage('assets/loading.gif'),
-          fit: BoxFit.cover,
-        ),
+      child: Opacity(
+        opacity: 0.9,
+        child: ClipRRect(
+            borderRadius: borderRadiusImg, child: _getImage(imageUrl)),
       ),
       decoration: _boxDecorationImg(borderRadiusImg),
     );
@@ -26,7 +26,7 @@ class ProductAddImage extends StatelessWidget {
   BoxDecoration _boxDecorationImg(BorderRadius borderRadiusImg) {
     return BoxDecoration(
       borderRadius: borderRadiusImg,
-      color: Colors.white.withOpacity(0.5),
+      color: Colors.black,
       boxShadow: const [
         BoxShadow(
           color: Colors.black26,
@@ -35,5 +35,20 @@ class ProductAddImage extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  Widget _getImage(String? imageUrl) {
+    if (imageUrl == null) {
+      return const Image(
+          image: AssetImage('assets/no-image.png'), fit: BoxFit.cover);
+    }
+    if (imageUrl.startsWith('http')) {
+      return FadeInImage(
+        image: NetworkImage(imageUrl),
+        placeholder: const AssetImage('assets/loading.gif'),
+        fit: BoxFit.cover,
+      );
+    }
+    return Image.file(File(imageUrl), fit: BoxFit.cover);
   }
 }
